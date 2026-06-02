@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ArgenEquip — Alquiler de Herramientas y Maquinaria · Mendoza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --accent:#EFA62B;
+    --accent-soft:#f6c062;
+    --ink:#0c0c0e;
+    --ink-2:#141417;
+    --ink-3:#1c1d22;
+    --line:#2a2b31;
+    --paper:#ffffff;
+    --text:#f4f1ea;
+    --muted:#9b968c;
+    --overlay:0.62;
+    --maxw:1240px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Archivo',sans-serif;
+    background:var(--ink);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{display:block;max-width:100%}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+  .kicker{
+    font-family:'Space Mono',monospace;
+    font-size:13px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--accent);
+  }
+  .hazard{
+    height:8px;width:100%;
+    background:repeating-linear-gradient(-45deg,var(--accent) 0 18px,#0c0c0e 18px 36px);
+  }
+
+  /* ---------- HEADER ---------- */
+  .site-header{
+    position:sticky;top:0;z-index:60;
+    background:var(--paper);
+    border-bottom:1px solid #ececec;
+  }
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;
+    height:84px;
+  }
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand img{height:46px;width:auto}
+  .brand .name{
+    display:flex;flex-direction:column;line-height:1;
+  }
+  .brand .name b{
+    font-weight:900;font-size:23px;letter-spacing:-.01em;color:#1c1c1c;
+  }
+  .brand .name span{
+    font-family:'Space Mono',monospace;
+    font-size:9.5px;letter-spacing:.18em;color:#8a8a8a;text-transform:uppercase;margin-top:4px;
+  }
+  .nav-links{display:flex;align-items:center;gap:38px}
+  .nav-links a{
+    font-weight:600;font-size:15.5px;color:#26262a;position:relative;padding:4px 0;
+  }
+  .nav-links a::after{
+    content:"";position:absolute;left:0;bottom:-2px;height:2px;width:0;background:var(--accent);transition:width .3s var(--ease);
+  }
+  .nav-links a:hover::after{width:100%}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    font-weight:800;font-size:15.5px;cursor:pointer;border:none;
+    transition:transform .18s var(--ease),background .2s,box-shadow .2s;
+  }
+  .btn-primary{
+    background:var(--accent);color:#171206;padding:14px 26px;border-radius:2px;
+    box-shadow:0 6px 0 0 #b97f17;
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 0 0 #b97f17}
+  .btn-primary:active{transform:translateY(2px);box-shadow:0 2px 0 0 #b97f17}
+  .menu-toggle{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:8px}
+  .menu-toggle span{width:26px;height:2.5px;background:#1c1c1c;display:block}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;min-height:88vh;display:flex;align-items:center;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:0}
+  .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:55% 60%}
+  .hero-bg::after{
+    content:"";position:absolute;inset:0;
+    background:
+      linear-gradient(90deg, rgba(8,8,10,calc(var(--overlay) + .2)) 0%, rgba(8,8,10,var(--overlay)) 45%, rgba(8,8,10,.25) 100%),
+      linear-gradient(0deg, rgba(8,8,10,.85) 0%, rgba(8,8,10,0) 40%);
+  }
+  .hero-inner{position:relative;z-index:2;padding:72px 0}
+  .hero h1{
+    font-weight:900;letter-spacing:-.02em;line-height:.96;
+    font-size:clamp(44px,7.4vw,108px);
+    text-transform:uppercase;max-width:14ch;margin:22px 0 0;
+    text-wrap:balance;
+  }
+  .hero h1 .em{color:var(--accent)}
+  .hero p.lead{
+    margin-top:26px;font-size:clamp(18px,2vw,23px);max-width:46ch;color:#e7e2d8;font-weight:500;
+  }
+  .hero-cta{display:flex;gap:16px;margin-top:38px;flex-wrap:wrap}
+  .btn-ghost{
+    background:transparent;color:var(--text);padding:14px 26px;border:2px solid rgba(255,255,255,.45);border-radius:2px;
+  }
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+  .hero-meta{
+    position:absolute;right:0;bottom:0;z-index:2;
+    font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.1em;color:#cfc9bd;
+    padding:18px 32px;border-left:1px solid rgba(255,255,255,.18);text-align:right;
+  }
+  .hero-meta b{color:var(--accent)}
+
+  /* ---------- MARQUEE ---------- */
+  .marquee{
+    background:var(--accent);color:#15100a;overflow:hidden;border-top:3px solid #000;border-bottom:3px solid #000;
+  }
+  .marquee-track{display:flex;gap:0;width:max-content;animation:scroll 32s linear infinite}
+  .marquee:hover .marquee-track{animation-play-state:paused}
+  .marquee-track .item{
+    font-family:'Space Mono',monospace;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.08em;
+    padding:14px 30px;display:flex;align-items:center;gap:30px;white-space:nowrap;
+  }
+  .marquee-track .item::after{content:"◆";font-size:9px;opacity:.5}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+
+  /* ---------- SECTION SHELL ---------- */
+  section.block{padding:110px 0}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-bottom:54px;flex-wrap:wrap}
+  .sec-head h2{
+    font-weight:900;text-transform:uppercase;letter-spacing:-.02em;line-height:.98;
+    font-size:clamp(34px,5vw,68px);max-width:16ch;
+  }
+  .sec-head .kicker{margin-bottom:16px;display:block}
+  .sec-head p{color:var(--muted);max-width:40ch;font-size:17px;line-height:1.5}
+
+  /* ---------- CAROUSEL ---------- */
+  .carousel{position:relative}
+  .viewport{overflow:hidden;border:1px solid var(--line);background:#000}
+  .track{display:flex;transition:transform .6s var(--ease)}
+  .slide{min-width:100%;position:relative;aspect-ratio:16/9;background:#000}
+  .slide img{width:100%;height:100%;object-fit:cover}
+  .slide .cap{
+    position:absolute;left:0;bottom:0;right:0;
+    padding:60px 40px 32px;
+    background:linear-gradient(0deg,rgba(8,8,10,.92),rgba(8,8,10,0));
+    display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  }
+  .slide .cap .t{font-weight:800;font-size:clamp(20px,2.6vw,30px);text-transform:uppercase;letter-spacing:-.01em}
+  .slide .cap .n{font-family:'Space Mono',monospace;color:var(--accent);font-size:13px;letter-spacing:.2em}
+  .car-btn{
+    position:absolute;top:50%;transform:translateY(-50%);z-index:5;
+    width:58px;height:58px;border:none;cursor:pointer;
+    background:var(--accent);color:#15100a;font-size:24px;font-weight:900;
+    display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s;
+  }
+  .car-btn:hover{background:#fff}
+  .car-btn.prev{left:18px}.car-btn.next{right:18px}
+  .dots{display:flex;gap:10px;justify-content:center;margin-top:26px}
+  .dots button{width:38px;height:5px;border:none;background:var(--line);cursor:pointer;padding:0;transition:background .25s}
+  .dots button.active{background:var(--accent)}
+
+  /* ---------- SERVICES LIST ---------- */
+  .services{background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .svc-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:0 70px;
+    border-top:1px solid var(--line);
+  }
+  .svc{
+    display:flex;align-items:baseline;gap:24px;padding:26px 6px;border-bottom:1px solid var(--line);
+    transition:background .25s,padding-left .25s var(--ease);cursor:default;
+  }
+  .svc:hover{background:rgba(239,166,43,.06);padding-left:18px}
+  .svc .num{font-family:'Space Mono',monospace;color:var(--accent);font-size:15px;min-width:34px}
+  .svc .label{font-weight:700;font-size:clamp(20px,2.4vw,28px);text-transform:uppercase;letter-spacing:-.01em}
+  .svc:hover .label{color:var(--accent-soft)}
+  .svc .arrow{margin-left:auto;color:var(--muted);font-size:18px;opacity:0;transform:translateX(-8px);transition:.25s var(--ease)}
+  .svc:hover .arrow{opacity:1;transform:translateX(0);color:var(--accent)}
+  .svc-note{margin-top:34px;color:var(--muted);font-size:15px;font-family:'Space Mono',monospace;letter-spacing:.04em}
+
+  /* ---------- CONTACT ---------- */
+  .contact{position:relative;background:#070708;overflow:hidden}
+  .glow{position:absolute;border-radius:50%;filter:blur(10px);z-index:0;pointer-events:none;
+    background:radial-gradient(circle,rgba(239,166,43,.14),transparent 70%)}
+  .glow.a{width:560px;height:560px;top:-180px;right:-120px}
+  .glow.b{width:480px;height:480px;bottom:-200px;left:-160px}
+  .contact .wrap{position:relative;z-index:2}
+  .contact-head{text-align:center;margin-bottom:54px}
+  .contact-head h2{font-weight:900;text-transform:uppercase;font-size:clamp(36px,5.4vw,72px);letter-spacing:-.02em}
+  .contact-head h2 .em{color:var(--accent)}
+  .contact-head p{color:var(--muted);margin-top:14px;font-size:18px}
+  .form{max-width:880px;margin:0 auto}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .field{display:flex;flex-direction:column}
+  .field.full{grid-column:1/-1}
+  .field label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+  .field input,.field select,.field textarea{
+    background:var(--ink-3);border:1px solid var(--line);color:var(--text);
+    padding:16px 18px;font-family:'Archivo',sans-serif;font-size:16px;border-radius:2px;outline:none;
+    transition:border-color .2s,box-shadow .2s;width:100%;
+  }
+  .field textarea{resize:vertical;min-height:96px}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(239,166,43,.18)}
+  .field input::placeholder,.field textarea::placeholder{color:#6c6860}
+  .form .btn-primary{width:100%;padding:18px;font-size:17px;margin-top:6px}
+  .form-foot{margin-top:14px;text-align:center;color:#6c6860;font-size:13px;font-family:'Space Mono',monospace}
+
+  .direct{margin-top:70px;border-top:1px solid var(--line);padding-top:50px}
+  .direct h3{font-family:'Space Mono',monospace;font-size:14px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:28px}
+  .direct-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:760px}
+  .person{display:flex;align-items:center;gap:18px;background:var(--ink-2);border:1px solid var(--line);padding:20px 22px;border-radius:2px;transition:border-color .2s,transform .2s}
+  .person:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .person .ic{width:48px;height:48px;flex:0 0 48px;background:rgba(239,166,43,.12);color:var(--accent);display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:20px}
+  .person .meta{display:flex;flex-direction:column}
+  .person .meta .who{color:var(--muted);font-size:14px}
+  .person .meta .tel{font-weight:800;font-size:19px;color:var(--text)}
+
+  /* ---------- FOOTER ---------- */
+  .footer{background:#060607;border-top:1px solid var(--line);padding:60px 0 40px}
+  .foot-grid{display:flex;justify-content:space-between;align-items:flex-start;gap:40px;flex-wrap:wrap}
+  .foot-brand{display:flex;align-items:center;gap:14px}
+  .foot-brand img{height:54px}
+  .foot-brand .name b{font-weight:900;font-size:24px;color:#fff;letter-spacing:-.01em;display:block}
+  .foot-brand .name span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+  .foot-col{display:flex;flex-direction:column;gap:12px}
+  .foot-col .h{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+  .foot-col a,.foot-col span{color:#b7b2a8;font-size:15px}
+  .foot-col a:hover{color:var(--accent)}
+  .foot-bottom{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#6c6860;font-size:13px;font-family:'Space Mono',monospace;letter-spacing:.04em}
+
+  /* ---------- WHATSAPP FAB ---------- */
+  .wa-fab{
+    position:fixed;right:24px;bottom:24px;z-index:80;
+    display:flex;align-items:center;gap:0;
+    background:#25D366;color:#fff;border-radius:50px;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+    height:62px;padding:0;overflow:hidden;
+    transition:padding .3s var(--ease),transform .2s;
+  }
+  .wa-fab:hover{transform:translateY(-3px);padding-right:24px}
+  .wa-fab .wa-ic{flex:0 0 62px;width:62px;height:62px;display:flex;align-items:center;justify-content:center}
+  .wa-fab .wa-ic svg{width:32px;height:32px;fill:#fff}
+  .wa-fab .wa-label{max-width:0;opacity:0;white-space:nowrap;font-weight:800;font-size:15px;transition:max-width .3s var(--ease),opacity .25s}
+  .wa-fab:hover .wa-label{max-width:200px;opacity:1}
+  .wa-fab::before{content:"";position:absolute;inset:0;border-radius:50px;box-shadow:0 0 0 0 rgba(37,211,102,.6);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:880px){
+    .wrap{padding:0 20px}
+    .nav-links{display:none}
+    .nav-links.open{
+      display:flex;flex-direction:column;position:absolute;top:84px;left:0;right:0;
+      background:#fff;border-bottom:1px solid #eee;padding:22px 20px;gap:18px;align-items:flex-start;
+    }
+    .header-cta{display:none}
+    .menu-toggle{display:flex}
+    .svc-grid{grid-template-columns:1fr;gap:0}
+    .form-grid{grid-template-columns:1fr}
+    .direct-grid{grid-template-columns:1fr}
+    .hero-meta{display:none}
+    section.block{padding:78px 0}
+    .car-btn{width:46px;height:46px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="#inicio" class="brand" aria-label="ArgenEquip inicio">
+      <img src="assets/logo-icon-t.png" alt="ArgenEquip" />
+      <span class="name"><b>argenequip</b><span>Alquiler de herramientas y maquinaria</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#inicio">Inicio</a>
+      <a href="#proyectos">Proyectos</a>
+      <a href="#equipos">Equipos</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <a href="#contacto" class="btn btn-primary header-cta">Solicitar Presupuesto</a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="inicio">
+  <div class="hero-bg">
+    <img id="heroImg" src="assets/proj-retro.jpeg" alt="Retroexcavadora CASE en obra" />
+  </div>
+  <div class="wrap hero-inner">
+    <span class="kicker">Alquiler de maquinaria · Mendoza, Argentina</span>
+    <h1>Equipamiento de <span class="em">construcción</span> a tu alcance</h1>
+    <p class="lead">Alquilamos maquinaria y herramientas profesionales para que tu obra avance sin frenos.</p>
+    <div class="hero-cta">
+      <a href="#equipos" class="btn btn-primary">Ver Equipos</a>
+      <a href="#contacto" class="btn btn-ghost">Contactar</a>
+    </div>
+  </div>
+  <div class="hero-meta">EQUIPOS DISPONIBLES<br /><b>RETRO · ANDAMIOS · COMPACTACIÓN</b></div>
+</section>
+
+<!-- ================= MARQUEE ================= -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marquee"></div>
+</div>
+
+<!-- ================= PROYECTOS / CAROUSEL ================= -->
+<section class="block" id="proyectos">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <span class="kicker">Nuestros trabajos</span>
+        <h2>Obras hechas con nuestros equipos</h2>
+      </div>
+      <p>Maquinaria de ArgenEquip trabajando en obras reales de la provincia de Mendoza.</p>
+    </div>
+
+    <div class="carousel reveal">
+      <div class="viewport">
+        <div class="track" id="track">
+          <!-- slides injected -->
+        </div>
+      </div>
+      <button class="car-btn prev" id="prev" aria-label="Anterior">‹</button>
+      <button class="car-btn next" id="next" aria-label="Siguiente">›</button>
+      <div class="dots" id="dots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EQUIPOS / SERVICIOS LIST ================= -->
+<section class="block services" id="equipos">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <span class="kicker">Lo que alquilamos</span>
+        <h2>Equipos &amp; herramientas en alquiler</h2>
+      </div>
+      <p>Una línea completa para encofrado, compactación y movimiento de suelo. Consultá disponibilidad y tarifas.</p>
+    </div>
+
+    <div class="svc-grid reveal" id="svcGrid"><!-- items injected --></div>
+    <p class="svc-note">¿No encontrás lo que buscás? Escribinos y lo conseguimos.</p>
+  </div>
+</section>
+
+<!-- ================= CONTACTO ================= -->
+<section class="block contact" id="contacto">
+  <span class="glow a"></span>
+  <span class="glow b"></span>
+  <div class="wrap">
+    <div class="contact-head reveal">
+      <h2>Solicitá tu <span class="em">presupuesto</span></h2>
+      <p>Completá el formulario y te contactamos a la brevedad.</p>
+    </div>
+
+    <form class="form reveal" id="quoteForm" novalidate>
+      <div class="form-grid">
+        <div class="field">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="tu@email.com" required />
+        </div>
+        <div class="field">
+          <label for="tel">Teléfono</label>
+          <input id="tel" name="tel" type="tel" placeholder="+54 9 261 ..." />
+        </div>
+        <div class="field">
+          <label for="equipo">Equipo</label>
+          <select id="equipo" name="equipo">
+            <option value="">Seleccioná un equipo</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="fechas">Fechas de alquiler</label>
+          <input id="fechas" name="fechas" type="text" placeholder="Ej: 15 al 30 de Abril" />
+        </div>
+        <div class="field full">
+          <label for="msg">Mensaje (opcional)</label>
+          <textarea id="msg" name="msg" placeholder="Contanos sobre tu obra..."></textarea>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Enviar Presupuesto</button>
+      <p class="form-foot">Se abrirá tu correo con la solicitud lista para enviar.</p>
+    </form>
+
+    <div class="direct reveal">
+      <h3>Contacto directo</h3>
+      <div class="direct-grid">
+        <a class="person" href="https://wa.me/5492615540228" target="_blank" rel="noopener">
+          <span class="ic">✆</span>
+          <span class="meta"><span class="who">Emiliano</span><span class="tel">+54 9 261 554-0228</span></span>
+        </a>
+        <a class="person" href="tel:+5492612545826">
+          <span class="ic">✆</span>
+          <span class="meta"><span class="who">Valentín</span><span class="tel">+54 9 261 254-5826</span></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/logo-icon-t.png" alt="ArgenEquip" />
+        <span class="name"><b>argenequip</b><span>Alquiler de herramientas y maquinaria</span></span>
+      </div>
+      <div class="foot-col">
+        <span class="h">Contacto</span>
+        <a href="https://wa.me/5492615540228" target="_blank" rel="noopener">Emiliano · +54 9 261 554-0228</a>
+        <a href="tel:+5492612545826">Valentín · +54 9 261 254-5826</a>
+      </div>
+      <div class="foot-col">
+        <span class="h">Dónde estamos</span>
+        <span>Mendoza, Argentina</span>
+        <a href="https://instagram.com/argenequip.mendoza" target="_blank" rel="noopener">@argenequip.mendoza</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> ArgenEquip — Alquiler de herramientas y maquinaria</span>
+      <span>MENDOZA · ARGENTINA</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= WHATSAPP FAB ================= -->
+<a class="wa-fab" href="https://wa.me/5492615540228?text=Hola%20ArgenEquip!%20Quiero%20consultar%20por%20un%20alquiler." target="_blank" rel="noopener" aria-label="WhatsApp">
+  <span class="wa-ic">
+    <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.738-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.247-.694.247-1.289.173-1.413z"/></svg>
+  </span>
+  <span class="wa-label">Escribinos</span>
+</a>
+
+<script>
+  // year
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // equipment data (single source of truth)
+  var EQUIPOS = ["Andamios","Tablones","Puntales","Tubo de descarga","Vibroapisonador","Vibrador de concreto","Grupos electrógenos","Placa compactadora","Retroexcavadora"];
+
+  // ----- services list -----
+  var svcGrid = document.getElementById('svcGrid');
+  EQUIPOS.forEach(function(name,i){
+    var d = document.createElement('div');
+    d.className='svc';
+    var n=(i+1).toString().padStart(2,'0');
+    d.innerHTML='<span class="num">'+n+'</span><span class="label">'+name+'</span><span class="arrow">→</span>';
+    svcGrid.appendChild(d);
+  });
+
+  // ----- marquee -----
+  var mq = document.getElementById('marquee');
+  var mqHTML='';
+  EQUIPOS.forEach(function(n){ mqHTML+='<span class="item">'+n+'</span>'; });
+  mq.innerHTML = mqHTML + mqHTML; // duplicate for seamless loop
+
+  // ----- select options -----
+  var sel = document.getElementById('equipo');
+  EQUIPOS.forEach(function(n){
+    var o=document.createElement('option'); o.value=n; o.textContent=n; sel.appendChild(o);
+  });
+
+  // ----- carousel -----
+  var SLIDES=[
+    {img:'assets/proj-puntales.jpeg', t:'Puntales y encofrado', n:'OBRA · MENDOZA'},
+    {img:'assets/proj-vibro.jpeg', t:'Vibroapisonador en zanjeo', n:'COMPACTACIÓN'},
+    {img:'assets/proj-andamios.jpeg', t:'Andamios listos para entrega', n:'ANDAMIAJE'},
+    {img:'assets/proj-placas.jpeg', t:'Placas compactadoras', n:'EQUIPO LIVIANO'},
+    {img:'assets/proj-rammer.jpeg', t:'Vibroapisonador Wacker', n:'COMPACTACIÓN'},
+    {img:'assets/proj-retro2.jpeg', t:'Retroexcavadora CAT 416', n:'MOVIMIENTO DE SUELO'},
+    {img:'assets/proj-martillo.jpeg', t:'Martillo demoledor', n:'DEMOLICIÓN'},
+    {img:'assets/proj-retro.jpeg', t:'Retroexcavadora CASE 580N', n:'MOVIMIENTO DE SUELO'}
+  ];
+  var track=document.getElementById('track'), dots=document.getElementById('dots');
+  SLIDES.forEach(function(s,i){
+    var sl=document.createElement('div'); sl.className='slide';
+    sl.innerHTML='<img src="'+s.img+'" alt="'+s.t+'" loading="lazy" /><div class="cap"><div class="t">'+s.t+'</div><div class="n">'+s.n+'</div></div>';
+    track.appendChild(sl);
+    var b=document.createElement('button'); b.setAttribute('aria-label','Imagen '+(i+1));
+    b.addEventListener('click',function(){go(i)}); dots.appendChild(b);
+  });
+  var idx=0, dotEls=dots.querySelectorAll('button'), n=SLIDES.length, timer;
+  function render(){ track.style.transform='translateX(-'+(idx*100)+'%)';
+    dotEls.forEach(function(d,i){ d.classList.toggle('active', i===idx); }); }
+  function go(i){ idx=(i+n)%n; render(); reset(); }
+  function next(){ go(idx+1); } function prev(){ go(idx-1); }
+  document.getElementById('next').addEventListener('click',next);
+  document.getElementById('prev').addEventListener('click',prev);
+  function reset(){ clearInterval(timer); timer=setInterval(next,5000); }
+  render(); reset();
+  var car=document.querySelector('.carousel');
+  car.addEventListener('mouseenter',function(){clearInterval(timer)});
+  car.addEventListener('mouseleave',reset);
+  // swipe
+  var sx=0;
+  car.addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});
+  car.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-sx; if(Math.abs(dx)>40){ dx<0?next():prev(); }});
+  document.addEventListener('keydown',function(e){ if(e.key==='ArrowRight')next(); if(e.key==='ArrowLeft')prev(); });
+
+  // ----- mobile menu -----
+  var mt=document.getElementById('menuToggle'), nl=document.getElementById('navLinks');
+  mt.addEventListener('click',function(){ nl.classList.toggle('open'); });
+  nl.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ nl.classList.remove('open'); }); });
+
+  // ----- form -> mailto -----
+  var DEST_EMAIL = "contacto@argenequip.com.ar"; // << reemplazar por el correo real
+  document.getElementById('quoteForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var f=e.target;
+    if(!f.nombre.value.trim() || !f.email.value.trim()){ f.reportValidity(); return; }
+    var body =
+      "Nombre: "+f.nombre.value+"\n"+
+      "Email: "+f.email.value+"\n"+
+      "Teléfono: "+(f.tel.value||"-")+"\n"+
+      "Equipo: "+(f.equipo.value||"-")+"\n"+
+      "Fechas: "+(f.fechas.value||"-")+"\n"+
+      "Mensaje: "+(f.msg.value||"-");
+    var subject = "Solicitud de presupuesto — "+(f.equipo.value||"ArgenEquip");
+    window.location.href = "mailto:"+DEST_EMAIL+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+  });
+
+  // ----- reveal on scroll -----
+  var io=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} }); },{threshold:.14});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+</script>
+
+<!-- ================= TWEAKS PANEL (React island) ================= -->
+<div id="tweaks-root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel">
+  const TWEAK_DEFAULTS = {
+    "accent": "#EFA62B",
+    "hero": "assets/proj-retro.jpeg",
+    "overlay": 0.62
+  };
+  function lighten(hex, amt){
+    const n = parseInt(hex.slice(1),16);
+    let r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+    r=Math.round(r+(255-r)*amt); g=Math.round(g+(255-g)*amt); b=Math.round(b+(255-b)*amt);
+    return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+  }
+  function TweaksApp(){
+    const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+    React.useEffect(()=>{
+      const root=document.documentElement;
+      root.style.setProperty('--accent', t.accent);
+      root.style.setProperty('--accent-soft', lighten(t.accent, .35));
+      root.style.setProperty('--overlay', String(t.overlay));
+      const hi=document.getElementById('heroImg'); if(hi && hi.getAttribute('src')!==t.hero) hi.src=t.hero;
+    }, [t.accent, t.overlay, t.hero]);
+    return (
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Marca" />
+        <TweakColor label="Color de acento" value={t.accent}
+          options={["#EFA62B","#F4C518","#E87A2B","#E0542B"]}
+          onChange={(v)=>setTweak('accent', v)} />
+        <TweakSection label="Hero" />
+        <TweakSelect label="Imagen principal" value={t.hero}
+          options={[
+            {value:"assets/proj-retro.jpeg", label:"Retroexcavadora CASE"},
+            {value:"assets/proj-puntales.jpeg", label:"Puntales en obra"},
+            {value:"assets/proj-vibro.jpeg", label:"Vibroapisonador"},
+            {value:"assets/proj-andamios.jpeg", label:"Andamios"}
+          ]}
+          onChange={(v)=>setTweak('hero', v)} />
+        <TweakSlider label="Oscuridad del hero" value={t.overlay} min={0.3} max={0.85} step={0.01}
+          onChange={(v)=>setTweak('overlay', v)} />
+      </TweaksPanel>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<TweaksApp />);
+</script>
+</body>
+</html>
